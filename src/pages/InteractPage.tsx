@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { WalletContext } from '../contexts/WalletContext';
 import { theme } from '../styles/theme';
+import { TokenTransferForm } from '../components/forms/TokenTransferForm';
 
 const PageContainer = styled.div`
   padding: ${theme.spacing.large};
@@ -11,10 +12,12 @@ const Title = styled.h1`
   font-size: 36px;
   color: ${theme.colors.primary};
   margin-bottom: ${theme.spacing.large};
+  text-align: center;
 `;
 
 const Message = styled.p`
     font-size: 18px;
+    text-align: center;
 `;
 
 export const InteractPage: React.FC = () => {
@@ -31,9 +34,8 @@ export const InteractPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <Title>Smart Contract Interaction</Title>
-      <p>Forms to interact with various smart contracts will be available here.</p>
-      {/* Komponen untuk interaksi kontrak akan ditambahkan di sini */}
+      <Title>Send ERC-20 Tokens</Title>
+      <TokenTransferForm />
     </PageContainer>
   );
 };

@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 
 // GANTI DENGAN API KEY ANDA
-const POLYGONSCAN_API_KEY = "9TVUBE5MKKHQDBECQIGEEFZ76A7RPNFBJ4";
+const POLYGONSCAN_API_KEY = process.env.REACT_APP_POLYGONSCAN_API_KEY;
 
 const API_URL = "https://api-amoy.polygonscan.com/api";
 
@@ -20,10 +20,10 @@ export interface Transaction {
  * @returns Promise yang resolve ke array Transaction.
  */
 export const fetchTransactions = async (address: string): Promise<Transaction[]> => {
-    if (POLYGONSCAN_API_KEY === "9TVUBE5MKKHQDBECQIGEEFZ76A7RPNFBJ4") {
-        console.error("PolygonScan API Key is not set. Please set it in src/services/transactionService.ts");
-        // Mengembalikan array kosong jika API key tidak diatur
-        return []; 
+    // Pemeriksaan keamanan untuk memastikan API key ada
+    if (!POLYGONSCAN_API_KEY) {
+        console.error("PolygonScan API Key is not set.");
+        throw new Error("API Key for PolygonScan is missing.");
     }
 
     const params = new URLSearchParams({

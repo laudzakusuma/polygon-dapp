@@ -5,7 +5,7 @@ import { Header } from './components/layout/Header';
 import { HomePage } from './pages/HomePage';
 import { AssetsPage } from './pages/AssetsPage';
 import { InteractPage } from './pages/InteractPage';
-import { HistoryPage } from './pages/HistoryPage'; // DIIMPOR
+import { HistoryPage } from './pages/HistoryPage';
 import { GlobalStyle } from './styles/GlobalStyles';
 import { WalletProvider } from './contexts/WalletContext';
 import { theme } from './styles/theme';

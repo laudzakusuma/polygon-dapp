@@ -6,28 +6,35 @@ import { shortenAddress } from '../../utils/helpers';
 import { theme } from '../../styles/theme';
 
 const ButtonBase = styled(motion.button)`
-  border: none;
-  padding: 10px 20px;
+  border: 1px solid transparent;
+  padding: 12px 24px;
   border-radius: ${theme.borderRadius};
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
 `;
 
 const Button = styled(ButtonBase)`
-  background-color: ${theme.colors.primary};
-  color: ${theme.colors.onPrimary};
+  background: linear-gradient(90deg, ${theme.colors.primary}, #c392ff);
+  color: ${theme.colors.background};
+  box-shadow: 0 0 20px ${theme.colors.glow};
+
+  &:hover {
+    box-shadow: 0 0 30px ${theme.colors.glow};
+  }
 `;
 
 const DisconnectButton = styled(ButtonBase)`
-    background-color: ${theme.colors.surface};
+    background-color: ${theme.glassmorphism.backgroundColor};
     color: ${theme.colors.onSurface};
     border: 1px solid ${theme.colors.border};
 
     &:hover {
-        background-color: ${theme.colors.error};
-        color: ${theme.colors.onPrimary};
+        border-color: ${theme.colors.error};
+        color: ${theme.colors.error};
     }
 `;
 

@@ -1,28 +1,24 @@
 export const theme = {
   colors: {
-    background: '#0a0a1a', // Latar belakang lebih gelap
-    surface: 'rgba(255, 255, 255, 0.05)', // Permukaan transparan
-    primary: '#9e78ff', // Warna ungu yang lebih cerah
-    primaryVariant: '#3700B3',
-    secondary: '#03DAC6',
-    onPrimary: '#000000',
-    onSurface: '#FFFFFF',
-    error: '#CF6679',
-    border: 'rgba(255, 255, 255, 0.1)', // Border transparan
-    shadow: 'rgba(0, 0, 0, 0.3)',
+    background: '#010108', // Latar belakang hitam kebiruan
+    surface: 'rgba(255, 255, 255, 0.05)',
+    primary: '#a77dfd', // Ungu pastel
+    secondary: '#23d9a5', // Hijau neon
+    onPrimary: '#FFFFFF',
+    onSurface: '#ebebeb',
+    error: '#ff7a7a',
+    border: 'rgba(255, 255, 255, 0.1)',
+    shadow: 'rgba(0, 0, 0, 0.5)',
+    glow: 'rgba(167, 125, 253, 0.5)', // Warna untuk efek glow
   },
   fonts: {
-    main: 'Inter, sans-serif',
+    main: "'Space Grotesk', sans-serif", // Font baru yang lebih modern
   },
-  spacing: {
-    small: '8px',
-    medium: '16px',
-    large: '24px',
-  },
-  borderRadius: '12px', // Sudut lebih bulat
+  spacing: { small: '8px', medium: '16px', large: '24px' },
+  borderRadius: '12px',
   glassmorphism: {
-    blur: '10px',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    blur: '12px',
+    backgroundColor: 'rgba(10, 10, 20, 0.5)', // Kaca lebih gelap
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
 };

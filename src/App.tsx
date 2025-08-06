@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom'; // Impor useLocation
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import styled from 'styled-components';
 import { Header } from './components/layout/Header';
@@ -9,6 +9,7 @@ import { InteractPage } from './pages/InteractPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { GlobalStyle } from './styles/GlobalStyles';
 import { WalletProvider } from './contexts/WalletContext';
+import { ParticleBackground } from './components/common/ParticleBackground';
 
 const AppContainer = styled.div`
   display: flex;
@@ -32,6 +33,7 @@ function App() {
   return (
     <WalletProvider>
       <GlobalStyle />
+      <ParticleBackground />
       <AppContainer>
         <Header />
         <AnimatePresence mode="wait">

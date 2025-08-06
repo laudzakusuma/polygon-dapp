@@ -1,25 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import styled from 'styled-components';
+import { Header } from './components/layout/Header';
+import { HomePage } from './pages/HomePage';
+import { AssetsPage } from './pages/AssetsPage';
+import { InteractPage } from './pages/InteractPage';
+import { GlobalStyle } from './styles/GlobalStyles';
+import { WalletProvider } from './contexts/WalletContext';
+import { theme } from './styles/theme';
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const MainContent = styled.main`
+  flex-grow: 1;
+  padding: ${theme.spacing.large};
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <WalletProvider>
+      <GlobalStyle />
+      <AppContainer>
+        <Header />
+        <MainContent>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/assets" element={<AssetsPage />} />
+            <Route path="/interact" element={<InteractPage />} />
+          </Routes>
+        </MainContent>
+      </AppContainer>
+    </WalletProvider>
   );
 }
 

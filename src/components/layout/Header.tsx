@@ -52,6 +52,7 @@ export const Header: React.FC = () => {
         <StyledNavLink to="/">Home</StyledNavLink>
         <StyledNavLink to="/assets">My Assets</StyledNavLink>
         <StyledNavLink to="/interact">Interact</StyledNavLink>
+        <StyledNavLink to="/history">History</StyledNavLink> {/* DITAMBAHKAN */}
       </Nav>
       <ConnectWalletButton />
     </HeaderContainer>

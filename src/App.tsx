@@ -5,6 +5,7 @@ import { Header } from './components/layout/Header';
 import { HomePage } from './pages/HomePage';
 import { AssetsPage } from './pages/AssetsPage';
 import { InteractPage } from './pages/InteractPage';
+import { HistoryPage } from './pages/HistoryPage'; // DIIMPOR
 import { GlobalStyle } from './styles/GlobalStyles';
 import { WalletProvider } from './contexts/WalletContext';
 import { theme } from './styles/theme';
@@ -31,6 +32,7 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/assets" element={<AssetsPage />} />
             <Route path="/interact" element={<InteractPage />} />
+            <Route path="/history" element={<HistoryPage />} /> {/* DITAMBAHKAN */}
           </Routes>
         </MainContent>
       </AppContainer>

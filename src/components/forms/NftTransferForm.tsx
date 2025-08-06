@@ -1,50 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAssets } from '../../hooks/useAssets';
 import { useNftTransfer } from '../../hooks/useNftTransfer';
-import { theme } from '../../styles/theme';
 import { Notification } from '../common/Notification';
-
-const FormContainer = styled.div`
-  background-color: ${theme.colors.surface};
-  padding: ${theme.spacing.large};
-  border-radius: ${theme.borderRadius};
-  border: 1px solid ${theme.colors.border};
-  max-width: 500px;
-  margin: 0 auto;
-`;
-
-const FormGroup = styled.div` margin-bottom: ${theme.spacing.medium}; `;
-const Label = styled.label` display: block; margin-bottom: ${theme.spacing.small}; font-weight: 500; `;
-const Input = styled.input`
-  width: 100%; padding: 12px; background-color: ${theme.colors.background};
-  border: 1px solid ${theme.colors.border}; border-radius: ${theme.borderRadius};
-  color: ${theme.colors.onSurface}; font-size: 16px;
-  &:focus { outline: none; border-color: ${theme.colors.primary}; }
-`;
-const Select = styled(Input).attrs({ as: 'select' })``;
-const SubmitButton = styled.button`
-  width: 100%; padding: 12px; background-color: ${theme.colors.primary};
-  color: ${theme.colors.onPrimary}; border: none; border-radius: ${theme.borderRadius};
-  font-size: 18px; font-weight: 600; cursor: pointer;
-  transition: background-color 0.2s ease;
-  &:hover:not(:disabled) { background-color: ${theme.colors.primaryVariant}; }
-  &:disabled { background-color: #555; cursor: not-allowed; }
-`;
-const TransactionLink = styled.a` color: ${theme.colors.secondary}; text-decoration: underline; font-weight: bold; `;
+import debounce from 'lodash.debounce';
+// Impor gaya yang dibagikan
+import { 
+    FormContainer, FormGroup, Label, Input, Select, SubmitButton, 
+    GasEstimateContainer, TransactionLink 
+} from './FormStyles';
 
 export const NftTransferForm: React.FC = () => {
     const { nfts, isLoading: isLoadingAssets } = useAssets();
-    const { isSending, error, transactionHash, transferNft, resetState } = useNftTransfer();
+    const { isSending, error, transactionHash, transferNft, resetState, isEstimating, gasEstimate, estimateGas } = useNftTransfer();
 
-    const [selectedNft, setSelectedNft] = useState<string>(''); // Format: "contractAddress-tokenId"
+    const [selectedNft, setSelectedNft] = useState<string>('');
     const [recipient, setRecipient] = useState<string>('');
+
+    const debouncedEstimate = useMemo(() => debounce(estimateGas, 500), [estimateGas]);
 
     useEffect(() => {
         if (nfts.length > 0 && !selectedNft) {
             setSelectedNft(`${nfts[0].contractAddress}-${nfts[0].tokenId}`);
         }
     }, [nfts, selectedNft]);
+
+    useEffect(() => {
+        if (selectedNft && recipient) {
+            const [contractAddress, tokenId] = selectedNft.split('-');
+            debouncedEstimate(contractAddress, recipient, tokenId);
+        }
+        return () => {
+            debouncedEstimate.cancel();
+        };
+    }, [selectedNft, recipient, debouncedEstimate]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -57,13 +45,12 @@ export const NftTransferForm: React.FC = () => {
             {error && <Notification message={`Error: ${error}`} type="error" onClose={resetState} />}
             {transactionHash && <Notification message="Transaction Successful!" type="success" onClose={resetState} />}
             {transactionHash && (
-                <p style={{ marginBottom: theme.spacing.medium, textAlign: 'center' }}>
+                <p style={{ marginBottom: "16px", textAlign: 'center' }}>
                     <TransactionLink href={`https://amoy.polygonscan.com/tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
                         View on Amoy Scan
                     </TransactionLink>
                 </p>
             )}
-
             <form onSubmit={handleSubmit}>
                 <FormGroup>
                     <Label htmlFor="nft">Select NFT</Label>
@@ -78,12 +65,15 @@ export const NftTransferForm: React.FC = () => {
                          ) : (<option>No NFTs found</option>)}
                     </Select>
                 </FormGroup>
-
                 <FormGroup>
                     <Label htmlFor="recipient">Recipient Address</Label>
                     <Input id="recipient" type="text" placeholder="0x..." value={recipient} onChange={(e) => setRecipient(e.target.value)} disabled={isSending} />
                 </FormGroup>
-
+                
+                <GasEstimateContainer>
+                    {isEstimating ? 'Estimating gas...' : gasEstimate ? `Est. Gas: ~${gasEstimate}` : ''}
+                </GasEstimateContainer>
+                
                 <SubmitButton type="submit" disabled={isSending || !selectedNft || nfts.length === 0}>
                     {isSending ? 'Sending...' : 'Send NFT'}
                 </SubmitButton>

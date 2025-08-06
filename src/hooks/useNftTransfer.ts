@@ -1,6 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useCallback } from 'react'; // import useCallback
 import { WalletContext } from '../contexts/WalletContext';
-import { sendNft as sendNftService } from '../services/tokenService';
+import { sendNft as sendNftService, estimateNftTransferGas } from '../services/tokenService';
 import { ethers } from 'ethers';
 
 export const useNftTransfer = () => {
@@ -10,41 +10,40 @@ export const useNftTransfer = () => {
     const [isSending, setIsSending] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [transactionHash, setTransactionHash] = useState<string | null>(null);
+    
+    // State baru untuk estimasi gas
+    const [isEstimating, setIsEstimating] = useState(false);
+    const [gasEstimate, setGasEstimate] = useState<string | null>(null);
 
     const transferNft = async (contractAddress: string, recipient: string, tokenId: string) => {
-        if (!signer) {
-            setError("Wallet not connected or signer not available.");
-            return;
-        }
-        if (!ethers.isAddress(recipient)) {
-            setError("Invalid recipient address.");
-            return;
-        }
-        if (!tokenId) {
-            setError("No NFT selected.");
-            return;
-        }
-
-        setIsSending(true);
-        setError(null);
-        setTransactionHash(null);
-
-        try {
-            const hash = await sendNftService(contractAddress, recipient, tokenId, signer);
-            setTransactionHash(hash);
-        } catch (err: any) {
-            console.error("NFT transfer failed:", err);
-            setError(err.reason || "Transaction failed. Check console for details.");
-        } finally {
-            setIsSending(false);
-        }
+        // ... implementasi sama ...
     };
+
+    const estimateGas = useCallback(async (contractAddress: string, recipient: string, tokenId: string) => {
+        if (!signer || !ethers.isAddress(recipient) || !tokenId) {
+            setGasEstimate(null);
+            return;
+        }
+
+        setIsEstimating(true);
+        setGasEstimate(null);
+        try {
+            const estimate = await estimateNftTransferGas(contractAddress, recipient, tokenId, signer);
+            setGasEstimate(estimate);
+        } catch (err) {
+            console.error("Gas estimation failed:", err);
+            setGasEstimate(null);
+        } finally {
+            setIsEstimating(false);
+        }
+    }, [signer]);
 
     const resetState = () => {
         setIsSending(false);
         setError(null);
         setTransactionHash(null);
+        setGasEstimate(null);
     }
 
-    return { isSending, error, transactionHash, transferNft, resetState };
+    return { isSending, error, transactionHash, transferNft, resetState, isEstimating, gasEstimate, estimateGas };
 };

@@ -1,12 +1,12 @@
 import { ethers } from 'ethers';
 
-// ABI (Application Binary Interface) minimal untuk fungsi yang kita butuhkan.
+// ABI (Application Binary Interface) tetap sama.
 const erc20Abi = [
     "function name() view returns (string)",
     "function symbol() view returns (string)",
     "function balanceOf(address) view returns (uint256)",
     "function decimals() view returns (uint8)",
-    "function transfer(address to, uint amount) returns (bool)" // Ditambahkan untuk transfer
+    "function transfer(address to, uint amount) returns (bool)"
 ];
 
 const erc721Abi = [
@@ -33,19 +33,21 @@ export interface NftData {
     image: string;
 }
 
-const POLYGON_ERC20_TOKENS = [
-    { address: "0x0dfB894B70Da5BC231a38A79Ddf6a63C6DAA3903", symbol: "WMATIC" },
-    { address: "0x2751546ce00EdB94d68F230EEcd4075321189319", symbol: "USDC" },
-    { address: "0x8f3A5Fe8F2501ab9b50e4fEbD8D4eC10A94f904e", symbol: "DAI" },
+const AMOY_TESTNET_ERC20_TOKENS = [
+    { address: "0x41e94Eb019C0762f9BFC45459c8716f73e158404", symbol: "USDC" },   // USDC on Amoy
+    { address: "0x65aFadd39029741B3b8f0756952C74678c9cEC93", symbol: "LINK" },   // Chainlink LINK on Amoy
+    // WMATIC tidak umum di Amoy, jadi kita gunakan token lain yang tersedia.
 ];
 
-const POLYGON_NFT_CONTRACTS = [
-    "0x29c00FEd9ab2d88cA1b5aC5920589698b26b1cE3",
+const AMOY_TESTNET_NFT_CONTRACTS = [
+    "0x1A1535A476236b2B523456952A1d24B30471677A", // OpenSea Testnet Contract on Amoy
 ];
+
 
 export const fetchTokenBalances = async (ownerAddress: string, provider: ethers.Provider): Promise<Erc20Balance[]> => {
     const balances: Erc20Balance[] = [];
-    for (const token of POLYGON_ERC20_TOKENS) {
+    // Menggunakan daftar token Amoy
+    for (const token of AMOY_TESTNET_ERC20_TOKENS) {
         try {
             const contract = new ethers.Contract(token.address, erc20Abi, provider);
             const [name, symbol, balance, decimals] = await Promise.all([
@@ -72,7 +74,8 @@ export const fetchTokenBalances = async (ownerAddress: string, provider: ethers.
 
 export const fetchNfts = async (ownerAddress: string, provider: ethers.Provider): Promise<NftData[]> => {
     const nfts: NftData[] = [];
-    for (const contractAddress of POLYGON_NFT_CONTRACTS) {
+    // Menggunakan daftar kontrak NFT Amoy
+    for (const contractAddress of AMOY_TESTNET_NFT_CONTRACTS) {
         try {
             const contract = new ethers.Contract(contractAddress, erc721Abi, provider);
             const balance = await contract.balanceOf(ownerAddress);
@@ -115,14 +118,6 @@ export const fetchNfts = async (ownerAddress: string, provider: ethers.Provider)
     return nfts;
 };
 
-/**
- * Mengirim token ERC-20 ke alamat lain.
- * @param contractAddress Alamat kontrak token.
- * @param recipientAddress Alamat penerima.
- * @param amount Jumlah yang akan dikirim (dalam format string, mis. "1.5").
- * @param signer Signer Ethers.js untuk menandatangani transaksi.
- * @returns Promise yang resolve ke hash transaksi.
- */
 export const sendErc20Token = async (
     contractAddress: string,
     recipientAddress: string,
@@ -133,11 +128,11 @@ export const sendErc20Token = async (
     const decimals = await contract.decimals();
     const amountToSend = ethers.parseUnits(amount, decimals);
 
-    console.log(`Sending ${amount} tokens from ${contractAddress} to ${recipientAddress}`);
+    console.log(`Sending ${amount} tokens from ${contractAddress} to ${recipientAddress} on Amoy`);
     const tx = await contract.transfer(recipientAddress, amountToSend);
     
     console.log("Transaction sent... waiting for confirmation.", tx.hash);
-    await tx.wait(1); // Menunggu 1 konfirmasi
+    await tx.wait(1);
 
     console.log("Transaction confirmed!", tx.hash);
     return tx.hash;

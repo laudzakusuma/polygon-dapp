@@ -101,8 +101,8 @@ export const TokenTransferForm: React.FC = () => {
             )}
             {transactionHash && (
                 <p style={{marginBottom: theme.spacing.medium, textAlign: 'center'}}>
-                    <TransactionLink href={`https://polygonscan.com/tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
-                        View on PolygonScan
+                    <TransactionLink href={`https://amoy.polygonscan.com/tx/${transactionHash}`} target="_blank" rel="noopener noreferrer">
+                        View on Amoy Scan
                     </TransactionLink>
                 </p>
             )}
@@ -118,7 +118,7 @@ export const TokenTransferForm: React.FC = () => {
                                     {token.symbol} (Balance: {parseFloat(token.balance).toFixed(4)})
                                 </option>
                             ))
-                         ) : ( <option>No tokens found</option> )
+                         ) : ( <option>No testnet tokens found</option> )
                         }
                     </Select>
                 </FormGroup>
